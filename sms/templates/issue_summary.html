@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block side %}
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">
+                                <span data-feather="home"></span>
+                                Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'stock' %}">
+                                <span data-feather="shopping-cart"></span>
+                                Products
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{% url 'issuesummary' %}">
+                                <span data-feather="file"></span>
+                                Sales <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'receivesummary' %}">
+                                <span data-feather="file"></span>
+                                Received 
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="users"></span>
+                                Customers
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="bar-chart-2"></span>
+                                Reports
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="layers"></span>
+                                Integrations
+                                </a>
+                            </li>
+                        </ul>
+{% endblock %}
+{% block content %}
+        <div class="alert alert-success" role="alert">
+            <form method='POST' action=''>
+                {% csrf_token %}
+                {{form|crispy}}
+                <input class="btn btn-outline-primary mybutton" type="submit" value='Search'/>
+            </form>
+        </div>
+        
+        <br>
+        <hr>
+            <h4 style='text-align : center'>SALES</h4>
+        <hr>
+        <br>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                 <thead class="thead-dark">
+                    <th>#</th>
+                    <th>ITEM NAME</th>
+                    <th>ISSUED QUANTITY</th>
+                    <th>ISSUED TO</th>
+                    <th>DATE</th>
+                </thead>
+
+                {% if issue %}
+                {% for i in issue %}
+                
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td><a href="{% url 'detail' i.stock.id %}">{{i.stock|upper}}</a></td>
+                    <td>{{i.issue_quantity}}</td>
+                    <td>{{i.issue_to|upper}}</td>
+                    <td>{{i.time}}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <div class="alert alert-primary" role="alert">
+                    NO SALES YET
+                </div>
+                {% endif %}
+            </table>
+        </div>
+        
+        <nav aria-label="Page navigation example">
+            {% load url_replace %}
+            {% if issue.has_other_pages %}
+                <ul class="pagination justify-content-center pagination-sm">
+                    {% if issue.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' issue.previous_page_number %}">PREVIOUS</a></li>
+                    {% else %}
+                        <li class="disabled page-item"><span class="page-link">PREVIOUS</span></li>
+                    {% endif %}
+                    {% for i in issue.paginator.page_range %}
+                        {% if issue.number == i %}
+                            <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' issue %}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if issue.has_next %}
+                        <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' issue.next_page_number %}">NEXT</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">NEXT</span></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </nav>
+        <hr>
+{% endblock %}

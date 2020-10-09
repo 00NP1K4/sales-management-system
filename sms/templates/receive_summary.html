@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block side %}
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">
+                                <span data-feather="home"></span>
+                                Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'stock' %}">
+                                <span data-feather="shopping-cart"></span>
+                                Products
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'issuesummary' %}">
+                                <span data-feather="file"></span>
+                                Sales
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{% url 'receivesummary' %}">
+                                <span data-feather="file"></span>
+                                Received <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="users"></span>
+                                Customers
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="bar-chart-2"></span>
+                                Reports
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="layers"></span>
+                                Integrations
+                                </a>
+                            </li>
+                        </ul>
+{% endblock %}
+{% block content %}
+        <div class="alert alert-success" role="alert">
+            <form method='POST' action=''>
+                {% csrf_token %}
+                {{form|crispy}}
+                <input class="btn btn-outline-primary mybutton" type="submit" value='Search'/>
+            </form>
+        </div>
+        
+        <br>
+        <hr>
+            <h4 style='text-align : center'>RECEIVED</h4>
+        <hr>
+        <br>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                 <thead class="thead-dark">
+                    <th>#</th>
+                    <th>ITEM NAME</th>
+                    <th>RECEIVED QUANTITY</th>
+                    <th>RECEIVED FROM</th>
+                    <th>DATE</th>
+                </thead>
+
+                {% if receive %}
+                {% for i in receive %}
+                
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td><a href="{% url 'detail' i.stock.id %}">{{i.stock|upper}}</a></td>
+                    <td>{{i.receive_quantity}}</td>
+                    <td>{{i.receive_from|upper}}</td>
+                    <td>{{i.time}}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <div class="alert alert-primary" role="alert">
+                    NO RECEIVES YET
+                </div>
+                {% endif %}
+            </table>
+        </div>
+
+{% endblock %}

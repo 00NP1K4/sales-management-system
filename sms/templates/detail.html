@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block side %}
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">
+                                <span data-feather="home"></span>
+                                Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{% url 'stock' %}">
+                                <span data-feather="shopping-cart"></span>
+                                Products <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'issuesummary' %}">
+                                <span data-feather="file"></span>
+                                Sales
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'receivesummary' %}">
+                                <span data-feather="file"></span>
+                                Received
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="users"></span>
+                                Customers
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="bar-chart-2"></span>
+                                Reports
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="layers"></span>
+                                Integrations
+                                </a>
+                            </li>
+                        </ul>
+{% endblock %}
+{% block content %}
+
+        <div class="alert alert-success" role="alert">
+            <h3 class="alert-heading">{{stock.item_name|upper}}</h3>
+            <hr>
+            <br>
+            <a href="{% url 'issue' stock.id %}"><div class='btn btn-outline-danger'>ISSUE THIS ITEM</div></a>
+            <a href="{% url 'receive' stock.id %}"><div class='btn btn-outline-primary'>RECEIVE THIS ITEM</div></a>
+        </div>
+{% endblock  %}
